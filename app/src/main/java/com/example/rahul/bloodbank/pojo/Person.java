@@ -1,4 +1,4 @@
-package com.example.rahul.bloodbank;
+package com.example.rahul.bloodbank.pojo;
 
 /**
  * Created by Rahul Goyal on 11/18/2016.

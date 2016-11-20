@@ -1,4 +1,4 @@
-package com.example.rahul.bloodbank;
+package com.example.rahul.bloodbank.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.rahul.bloodbank.pojo.Person;
+import com.example.rahul.bloodbank.R;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
