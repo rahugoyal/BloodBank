@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/img_login_bg">
+
+    <TextView
+        android:id="@+id/tv_text_registration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:text="Registration From"
+        android:textColor="#cb14c8"
+        android:textSize="32dp" />
+
+    <View
+        android:id="@+id/v_view_registration"
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_below="@+id/tv_text_registration"
+        android:layout_marginTop="8dp"
+        android:background="#cb14c8" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/v_view_registration"
+        android:fillViewport="true">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp">
+
+
+            <EditText
+                android:id="@+id/et_name_registration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#FFFFFF"
+                android:gravity="center"
+                android:hint="*name"
+                android:inputType="textPersonName"
+                android:singleLine="true"
+                android:textColor="#ffffff"
+                android:textColorHint="#FFFFFF" />
+
+            <RadioGroup
+                android:id="@+id/rg_gender_registration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_name_registration"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rb_male_registration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:buttonTint="#FFFFFF"
+                    android:text="Male"
+                    android:textColor="#ffffff" />
+
+                <RadioButton
+                    android:id="@+id/rb_female_registration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:checked="false"
+                    android:text="Female"
+                    android:buttonTint="#FFFFFF"
+                    android:textColor="#ffffff" />
+            </RadioGroup>
+
+            <EditText
+                android:id="@+id/et_mail_registration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/rg_gender_registration"
+                android:backgroundTint="#FFFFFF"
+                android:gravity="center"
+                android:hint="*email"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                android:textColor="#ffffff"
+                android:textColorHint="#FFFFFF" />
+
+            <EditText
+                android:id="@+id/et_mobile_registration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_mail_registration"
+                android:backgroundTint="#FFFFFF"
+                android:gravity="center"
+                android:hint="*phone"
+                android:inputType="number"
+                android:maxLength="10"
+                android:singleLine="true"
+                android:textColor="#ffffff"
+                android:textColorHint="#FFFFFF" />
+
+            <EditText
+                android:id="@+id/et_address_registration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_mobile_registration"
+                android:backgroundTint="#FFFFFF"
+                android:gravity="center"
+                android:hint="*address"
+                android:inputType="textPostalAddress"
+                android:singleLine="true"
+                android:textColor="#ffffff"
+                android:textColorHint="#FFFFFF" />
+
+            <EditText
+                android:id="@+id/et_city_registration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_address_registration"
+                android:backgroundTint="#FFFFFF"
+                android:gravity="center"
+                android:hint="*city"
+                android:inputType="textPersonName"
+                android:singleLine="true"
+                android:textColor="#ffffff"
+                android:textColorHint="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/tv_auth_registration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_city_registration"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="24dp"
+                android:text="*Authentication Details "
+                android:textColor="#cb14c8"
+                android:textSize="24dp" />
+
+            <EditText
+                android:id="@+id/et_username_registration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_auth_registration"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="#FFFFFF"
+                android:gravity="center"
+                android:hint="*username"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textColor="#ffffff"
+                android:textColorHint="#FFFFFF" />
+
+
+            <EditText
+                android:id="@+id/et_password_registration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_username_registration"
+                android:backgroundTint="#FFFFFF"
+                android:gravity="center"
+                android:hint="*password"
+                android:inputType="textPassword"
+                android:singleLine="true"
+                android:textColor="#ffffff"
+                android:textColorHint="#FFFFFF" />
+
+
+            <ImageView
+                android:id="@+id/im_choose_registration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_password_registration"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="24dp"
+                android:src="@drawable/user_browse_ic" />
+
+            <Spinner
+                android:layout_marginTop="24dp"
+                android:id="@+id/sp_btype_registration"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:prompt="@string/spinner_title"
+                android:padding="4dp"
+                android:layout_below="@+id/im_choose_registration"
+                android:background="#ffffff" />
+
+            <LinearLayout
+                android:id="@+id/ll_usertype_registration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/sp_btype_registration"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="24dp"
+
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/cb_donor_registration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="Donor"
+                    android:buttonTint="#FFFFFF"
+                    android:textColor="#ffffff" />
+
+                <CheckBox
+                    android:id="@+id/cb_acceptor_registration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:checked="false"
+                    android:text="Acceptor"
+                    android:buttonTint="#FFFFFF"
+                    android:textColor="#ffffff" />
+
+            </LinearLayout>
+
+            <Button
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="32dp"
+                android:id="@+id/bt_registration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_usertype_registration"
+                android:layout_centerHorizontal="true"
+                android:background="#1f9bde"
+                android:text="Register" />
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/img_login_bg">
+
+
+    <ImageView
+        android:id="@+id/iv_forget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/im_forgotpwd_ic" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp">
+    <EditText
+        android:id="@+id/et_username_forgotpwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FFFFFF"
+        android:gravity="center"
+        android:hint="*username"
+        android:inputType="textPersonName"
+        android:maxLength="10"
+        android:singleLine="true"
+        android:textColor="#ffffff"
+        android:textColorHint="#FFFFFF" />
+
+    <EditText
+        android:id="@+id/et_password_forgotpwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_username_forgotpwd"
+        android:backgroundTint="#FFFFFF"
+        android:gravity="center"
+        android:hint="*password"
+        android:inputType="textPassword"
+        android:singleLine="true"
+        android:textColor="#ffffff"
+        android:textColorHint="#FFFFFF" />
+
+    <EditText
+        android:id="@+id/et_confirm_password_forgotpwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_password_forgotpwd"
+        android:backgroundTint="#FFFFFF"
+        android:gravity="center"
+        android:hint="*confirm password"
+        android:inputType="textPassword"
+        android:singleLine="true"
+        android:textColor="#ffffff"
+        android:textColorHint="#FFFFFF" />
+
+
+    <Button
+        android:layout_marginTop="16dp"
+        android:padding="8dp"
+        android:id="@+id/bt_forgotpwd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_confirm_password_forgotpwd"
+        android:layout_centerHorizontal="true"
+        android:background="#1f9bde"
+        android:text="Change Password" />
+</RelativeLayout>
+</RelativeLayout>
