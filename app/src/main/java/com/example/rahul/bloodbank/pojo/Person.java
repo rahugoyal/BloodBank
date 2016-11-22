@@ -5,27 +5,32 @@ package com.example.rahul.bloodbank.pojo;
  */
 
 public class Person {
-    //name and address string
-    private String name;
-    private String address;
 
-    public Person() {
-      /*Blank default constructor essential for Firebase*/
-    }
-    //Getters and setters
-    public String getName() {
-        return name;
+    private String username;
+    private String password;
+
+    public Person(String username, String password) {
+        this.username= username;
+        this.password = password;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Person(){
+
     }
 
-    public String getAddress() {
-        return address;
+    public String getUserName() {
+        return username;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setUserName(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String address) {
+        this.password = password;
     }
 }
