@@ -17,6 +17,9 @@ public class RegistrationPojo {
     private String username;
     private String password;
 
+    public RegistrationPojo() {
+    }
+
     public RegistrationPojo(String gender, String address, String email, String bgType, String city, String name, String userType, String password, String username, String photo, String phone) {
         this.gender = gender;
         this.address = address;

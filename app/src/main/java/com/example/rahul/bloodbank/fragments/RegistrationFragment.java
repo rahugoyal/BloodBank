@@ -1,16 +1,24 @@
 package com.example.rahul.bloodbank.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -19,7 +27,11 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.rahul.bloodbank.R;
+import com.example.rahul.bloodbank.pojo.RegistrationPojo;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +51,9 @@ public class RegistrationFragment extends Fragment {
     RadioGroup mRgGender;
 
     int PICK_IMAGE = 1;
+    String gender = "", bloodGroupType = "", userType = "";
+    Uri uri;
+    String encodedImage;
 
     @Nullable
     @Override
@@ -70,9 +85,18 @@ public class RegistrationFragment extends Fragment {
         mRgGender = (RadioGroup) view.findViewById(R.id.rg_gender_registration);
         mSpBType = (Spinner) view.findViewById(R.id.sp_btype_registration);
         mIvPhoto = (ImageView) view.findViewById(R.id.im_choose_registration);
+        mRgGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == 0) {
+                    gender = "male";
+                } else {
+                    gender = "female";
+                }
+            }
+        });
 
-
-        List<String> bType = new ArrayList<String>();
+        final List<String> bType = new ArrayList<String>();
         bType.add("Select Blood Group");
         bType.add("A+");
         bType.add("A-");
@@ -87,13 +111,6 @@ public class RegistrationFragment extends Fragment {
         mSpBType.setAdapter(dataAdapter);
 
 
-        int genderId = mRgGender.getCheckedRadioButtonId();
-        if (genderId == 0) {
-
-        } else {
-
-        }
-
         mIvPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,7 +122,159 @@ public class RegistrationFragment extends Fragment {
             }
         });
 
+        mSpBType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position > 0) {
+                    bloodGroupType = bType.get(position);
+                }
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        mCbDonor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                getUserType();
+            }
+        });
+        mCbAcceptor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                getUserType();
+            }
+        });
+
+        mBtRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (validateLogin()) {
+                    RegistrationPojo registrationPojo = new RegistrationPojo();
+
+                    registrationPojo.setName(mEtName.getText().toString());
+                    registrationPojo.setGender(gender);
+                    registrationPojo.setEmail(mEtEmail.getText().toString());
+                    registrationPojo.setPhone(mEtPhone.getText().toString());
+                    registrationPojo.setAddress(mEtAddress.getText().toString());
+                    registrationPojo.setCity(mEtCity.getText().toString());
+                    registrationPojo.setUsername(mEtUsername.getText().toString());
+                    registrationPojo.setPassword(mEtPwd.getText().toString());
+                    if (encodedImage != null)
+                        registrationPojo.setPhoto(encodedImage);
+                    else
+                        registrationPojo.setPhoto("No image");
+
+                    registrationPojo.setBgType(bloodGroupType);
+                    registrationPojo.setUserType(userType);
+
+                    Toast.makeText(getActivity(), "Register successfully", Toast.LENGTH_SHORT).show();
+
+                    getActivity().getSupportFragmentManager().popBackStack();
+                }
+            }
+        });
+
+
+    }
+
+    private void getUserType() {
+        if (mCbDonor.isChecked() && mCbAcceptor.isChecked()) {
+            userType = "Donor and Acceptor";
+        } else if (mCbDonor.isChecked()) {
+            userType = "Donor";
+
+        } else if (mCbAcceptor.isChecked()) {
+            userType = "Acceptor";
+        }
+
+    }
+
+    private boolean validateLogin() {
+        boolean registerStatus = false;
+        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
+        final String PASSWORD_PATTERN =
+                "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})";
+        if (mEtName.getText().toString().isEmpty()) {
+            mEtName.setError("Name can not be empty");
+
+        } else if (gender.isEmpty()) {
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("Warning!")
+                    .setMessage("Pleease select Gender")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+
+        } else if (mEtEmail.getText().toString().isEmpty()) {
+            mEtEmail.setError("Email can not be empty");
+
+        } else if (!mEtEmail.getText().toString().matches(emailPattern)) {
+            mEtEmail.setError("Invalid Email");
+        } else if (mEtPhone.getText().toString().isEmpty()) {
+            mEtPhone.setError("Phone can not be empty");
+
+        } else if (mEtPhone.getText().toString().length() != 10) {
+            mEtPhone.setError("Please enter valid phone number");
+
+        } else if (mEtAddress.getText().toString().isEmpty()) {
+            mEtAddress.setError("Address can not be empty");
+
+        } else if (mEtCity.getText().toString().isEmpty()) {
+            mEtCity.setError("City can not be empty");
+
+        } else if (mEtUsername.getText().toString().isEmpty()) {
+            mEtUsername.setError("Username can not be empty");
+            ;
+        } else if (mEtPwd.getText().toString().isEmpty()) {
+            mEtPwd.setError("Password can not be empty");
+        } else if (!mEtPwd.getText().toString().matches(PASSWORD_PATTERN)) {
+            mEtPwd.setError("Password must contain Minimum 8 characters at least 1 Uppercase Alphabet, 1 Lowercase Alphabet, 1 Number and 1 Special Character");
+        } else if (bloodGroupType.isEmpty()) {
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("Warning!")
+                    .setMessage("Pleease select Blood Group")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+
+        } else if (!mCbAcceptor.isChecked() && !mCbDonor.isChecked()) {
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("Warning!")
+                    .setMessage("Pleease select at least one category")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+        } else
+            registerStatus = true;
+        return registerStatus;
     }
 
     @Override
@@ -114,11 +283,32 @@ public class RegistrationFragment extends Fragment {
 
         if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
             if (data != null) {
-                Uri uri = data.getData();
+                uri = data.getData();
+
+                //base 64
+                final InputStream imageStream;
+                try {
+                    imageStream = getActivity().getContentResolver().openInputStream(uri);
+                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                    encodedImage = encodeImage(selectedImage);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+
                 mIvPhoto.setImageURI(uri);
             } else {
                 Toast.makeText(getActivity(), "No Image selected", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private String encodeImage(Bitmap bm) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String encImage = Base64.encodeToString(b, Base64.DEFAULT);
+
+        return encImage;
     }
 }
