@@ -60,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(intentDashboard);
                 }
                 else{
-                    Toast.makeText(getBaseContext(),"user name or password can not empty",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(),"profile_drawer name or password can not empty",Toast.LENGTH_SHORT).show();
                 }
             }
         });

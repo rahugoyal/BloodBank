@@ -2,4 +2,6 @@
     <string name="app_name">BloodBank</string>
     <string name="spinner_title">BloodBank</string>
     <string name="signup_text"><u>New here? Sign Up</u></string>
+    <string name="drawer_close">close</string>
+    <string name="drawer_open">open</string>
 </resources>
