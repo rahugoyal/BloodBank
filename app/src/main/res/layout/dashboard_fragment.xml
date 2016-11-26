@@ -4,9 +4,58 @@
     android:layout_height="match_parent"
     android:background="@drawable/im_dashboard_bg">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="fragment"/>
+    <RelativeLayout
+        android:id="@+id/rl_dashboard_bd"
+        android:layout_width="200dp"
+        android:layout_height="230dp"
+        android:layout_marginTop="16dp"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:background="@drawable/circular_view_dashboard"
+        android:layout_centerHorizontal="true" >
+
+       <ImageView
+           android:layout_marginTop="8dp"
+           android:id="@+id/iv_view_dashboard_bd"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:src="@drawable/blood_donate_ic"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Blood Donate"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_below="@+id/iv_view_dashboard_bd"/>
+        </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_dashboard_ba"
+        android:layout_width="200dp"
+        android:layout_height="230dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:layout_marginBottom="32dp"
+        android:background="@drawable/circular_view_dashboard"
+        android:layout_centerHorizontal="true" >
+
+        <ImageView
+            android:layout_marginTop="8dp"
+            android:id="@+id/iv_view_dashboard_ba"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/blood_request_ic"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Blood Request"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_below="@+id/iv_view_dashboard_ba"/>
+    </RelativeLayout>
+
+
 
 </RelativeLayout>
