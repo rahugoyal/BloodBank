@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_centerVertical="true"
+    android:background="@drawable/im_dashboard_bg"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_marginTop="64dp"
+        android:textSize="24dp"
+        android:text="Ready to donate"
+        android:id="@+id/tv_bd_name"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000"/>
+
+    <TextView
+        android:textSize="24dp"
+        android:text="Ready to donate"
+        android:layout_below="@+id/tv_bd_name"
+        android:layout_marginTop="32dp"
+        android:id="@+id/tv_bd_city"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000"/>
+
+    <TextView
+        android:textSize="24dp"
+        android:layout_centerHorizontal="true"
+        android:text="Ready to donate"
+        android:layout_below="@+id/tv_bd_city"
+        android:layout_marginTop="32dp"
+        android:id="@+id/tv_bd_bloodgroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000"/>
+
+    <TextView
+
+        android:textSize="24dp"
+        android:text="Ready to donate"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tv_bd_bloodgroup"
+        android:layout_marginTop="32dp"
+        android:id="@+id/tv_bd_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000"/>
+
+    <TextView
+        android:textSize="24dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tv_bd_phone"
+        android:text="Ready to donate"
+        android:layout_marginTop="32dp"
+        android:id="@+id/tv_bd_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000"/>
+
+
+    <Button
+        android:padding="8dp"
+        android:textSize="24dp"
+        android:background="#1f9bde"
+        android:text="Ready to donate"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tv_bd_email"
+        android:layout_marginTop="32dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#000"
+        android:id="@+id/bt_donor_status"/>
+
+</RelativeLayout>

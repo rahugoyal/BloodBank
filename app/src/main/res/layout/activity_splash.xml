@@ -7,4 +7,5 @@
     android:background="@drawable/img_splash_bg"
     tools:context="com.example.rahul.bloodbank.activities.SplashActivity">
 
+
 </RelativeLayout>

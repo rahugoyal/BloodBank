@@ -1,9 +1,19 @@
 package com.example.rahul.bloodbank.activities;
 
 import android.content.Intent;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+
+
 import com.example.rahul.bloodbank.R;
+import com.example.rahul.bloodbank.constants.Constant;
+
+import com.firebase.client.Firebase;
+
+
+
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -12,14 +22,24 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        Thread timerThread = new Thread(){
-            public void run(){
-                try{
+        //initialization of firebase
+        Firebase.setAndroidContext(this);
+        if (Constant.FIREBASE_REF == null) {
+            Constant.FIREBASE_REF = new Firebase(Constant.FIREBASE_URL);
+        }
+
+
+
+
+
+        Thread timerThread = new Thread() {
+            public void run() {
+                try {
                     sleep(3000);
-                }catch(InterruptedException e){
+                } catch (InterruptedException e) {
                     e.printStackTrace();
-                }finally{
-                    Intent intent = new Intent(SplashActivity.this,LoginActivity.class);
+                } finally {
+                    Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
                     startActivity(intent);
                 }
             }
@@ -32,5 +52,4 @@ public class SplashActivity extends AppCompatActivity {
         super.onPause();
         finish();
     }
-
 }

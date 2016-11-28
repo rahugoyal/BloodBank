@@ -30,6 +30,7 @@
             android:backgroundTint="#FFFFFF"
             android:gravity="center"
             android:hint="username"
+            android:text="jaishree"
             android:textColor="#ffffff"
             android:textColorHint="#FFFFFF" />
 
@@ -42,6 +43,7 @@
             android:backgroundTint="#FFFFFF"
             android:gravity="center"
             android:hint="password"
+            android:text="Jai@445"
             android:inputType="textPassword"
             android:textColor="#ffffff"
             android:textColorHint="#FFFFFF" />

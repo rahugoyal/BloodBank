@@ -1,10 +1,13 @@
 package com.example.rahul.bloodbank.pojo;
 
+
+import java.io.Serializable;
+
 /**
  * Created by Rahul on 11/20/2016.
  */
 
-public class RegistrationPojo {
+public class RegistrationPojo implements Serializable {
     private String phone;
     private String address;
     private String email;
@@ -16,6 +19,8 @@ public class RegistrationPojo {
     private String photo;
     private String username;
     private String password;
+    private boolean donorStatus;
+    private boolean acceptorStatus;
 
     public RegistrationPojo() {
     }
@@ -120,5 +125,21 @@ public class RegistrationPojo {
 
     public void setBgType(String bgType) {
         this.bgType = bgType;
+    }
+
+    public boolean isDonorStatus() {
+        return donorStatus;
+    }
+
+    public void setDonorStatus(boolean donorStatus) {
+        this.donorStatus = donorStatus;
+    }
+
+    public boolean isAcceptorStatus() {
+        return acceptorStatus;
+    }
+
+    public void setAcceptorStatus(boolean acceptorStatus) {
+        this.acceptorStatus = acceptorStatus;
     }
 }

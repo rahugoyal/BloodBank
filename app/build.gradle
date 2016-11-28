@@ -30,6 +30,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.firebase:firebase-client-android:2.4.0'
     compile 'com.android.support:design:23.1.1'
+    compile 'com.google.code.gson:gson:2.2.+'
 
 }
 apply plugin: 'com.google.gms.google-services'

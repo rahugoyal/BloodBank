@@ -9,8 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,11 +25,13 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.rahul.bloodbank.R;
+import com.example.rahul.bloodbank.constants.Constant;
 import com.example.rahul.bloodbank.pojo.RegistrationPojo;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +53,7 @@ public class RegistrationFragment extends Fragment {
     int PICK_IMAGE = 1;
     String gender = "", bloodGroupType = "", userType = "";
     Uri uri;
-    String encodedImage;
+    byte[] encodedImage;
 
     @Nullable
     @Override
@@ -88,7 +88,7 @@ public class RegistrationFragment extends Fragment {
         mRgGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == 0) {
+                if (checkedId == 1) {
                     gender = "male";
                 } else {
                     gender = "female";
@@ -163,18 +163,32 @@ public class RegistrationFragment extends Fragment {
                     registrationPojo.setCity(mEtCity.getText().toString());
                     registrationPojo.setUsername(mEtUsername.getText().toString());
                     registrationPojo.setPassword(mEtPwd.getText().toString());
-                    if (encodedImage != null)
-                        registrationPojo.setPhoto(encodedImage);
-                    else
-                        registrationPojo.setPhoto("No image");
+
+
+                    if (encodedImage != null) {
+                        String decoded = null;
+                        try {
+                            decoded = new String(encodedImage, "ISO-8859-1");
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                        registrationPojo.setPhoto(decoded);
+                    } else
+                        registrationPojo.setPhoto(null);
 
                     registrationPojo.setBgType(bloodGroupType);
                     registrationPojo.setUserType(userType);
 
+                    Constant.FIREBASE_REF.child("person").child(registrationPojo.getUsername()).setValue(registrationPojo);
+
                     Toast.makeText(getActivity(), "Register successfully", Toast.LENGTH_SHORT).show();
 
                     getActivity().getSupportFragmentManager().popBackStack();
+                } else {
+                    Toast.makeText(getActivity(), "Not Registered, due to internal error", Toast.LENGTH_SHORT).show();
+
                 }
+
             }
         });
 
@@ -290,6 +304,7 @@ public class RegistrationFragment extends Fragment {
                 try {
                     imageStream = getActivity().getContentResolver().openInputStream(uri);
                     final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+
                     encodedImage = encodeImage(selectedImage);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -303,12 +318,22 @@ public class RegistrationFragment extends Fragment {
         }
     }
 
-    private String encodeImage(Bitmap bm) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] b = baos.toByteArray();
-        String encImage = Base64.encodeToString(b, Base64.DEFAULT);
 
-        return encImage;
+    public byte[] encodeImage(Bitmap bitmap) {
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        return byteArray;
     }
+//    private Bitmap encodeImage(Bitmap bm) {
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        bm.compress(Bitmap.CompressFormat.JPEG, 40, baos);
+//        byte[] b = baos.toByteArray();
+//
+//        Bitmap encImage = BitmapFactory.decodeByteArray(b, 0, b.length);
+//
+//
+//        return encImage;
+//    }
 }

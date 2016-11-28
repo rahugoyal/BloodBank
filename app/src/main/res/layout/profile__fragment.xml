@@ -4,9 +4,128 @@
     android:layout_height="match_parent"
     android:background="@drawable/im_dashboard_bg">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="profile fragment"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="16dp">
+
+
+            <EditText
+                android:id="@+id/et_mail_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#FFFFFF"
+                android:gravity="center"
+                android:hint="*email"
+                android:inputType="textEmailAddress"
+                android:singleLine="true"
+                android:textColor="#000"
+                android:textColorHint="#FFFFFF" />
+
+            <EditText
+                android:id="@+id/et_mobile_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_mail_profile"
+                android:backgroundTint="#FFFFFF"
+                android:gravity="center"
+                android:hint="*phone"
+                android:inputType="number"
+                android:maxLength="10"
+                android:singleLine="true"
+                android:textColor="#000"
+                android:textColorHint="#FFFFFF" />
+
+            <EditText
+                android:id="@+id/et_address_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_mobile_profile"
+                android:backgroundTint="#FFFFFF"
+                android:gravity="center"
+                android:hint="*address"
+                android:inputType="textPostalAddress"
+                android:singleLine="true"
+                android:textColor="#000"
+                android:textColorHint="#FFFFFF" />
+
+            <EditText
+                android:id="@+id/et_city_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_address_profile"
+                android:backgroundTint="#FFFFFF"
+                android:gravity="center"
+                android:hint="*city"
+                android:inputType="textPersonName"
+                android:singleLine="true"
+                android:textColor="#000"
+                android:textColorHint="#FFFFFF" />
+
+
+            <ImageView
+                android:id="@+id/im_choose_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/et_city_profile"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="24dp"
+                android:src="@drawable/user_browse_ic" />
+
+
+            <LinearLayout
+                android:id="@+id/ll_usertype_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/im_choose_profile"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="24dp"
+
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/cb_donor_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="#FFFFFF"
+                    android:checked="false"
+                    android:text="Donor"
+                    android:textColor="#000" />
+
+                <CheckBox
+                    android:id="@+id/cb_acceptor_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:buttonTint="#FFFFFF"
+                    android:checked="false"
+                    android:text="Acceptor"
+                    android:textColor="#000" />
+
+
+            </LinearLayout>
+
+            <ImageButton
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="32dp"
+                android:id="@+id/bt_edit_save_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_usertype_profile"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/ic_edit_profile"
+                android:text="Register"/>
+        </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.rahul.bloodbank.R;
@@ -19,18 +20,26 @@ import com.example.rahul.bloodbank.R;
 public class ForgetPwdFragment extends Fragment {
     EditText mEtusername, mEtpassword, mEtconfirmpwd;
     Button mBtforgotpwd;
+    RelativeLayout mRlForgotPwd;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.forget_pwd_fragment, container, false);
+        initializeViews(view);
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initializeViews(view);
+        if (getArguments() != null) {
+            boolean isSetting = getArguments().getBoolean("isSetting");
+            if (isSetting) {
+                mRlForgotPwd.setBackgroundResource(R.drawable.im_dashboard_bg);
+            }
+        }
+
     }
 
     private void initializeViews(View view) {
@@ -38,13 +47,14 @@ public class ForgetPwdFragment extends Fragment {
         mEtpassword = (EditText) view.findViewById(R.id.et_password_forgotpwd);
         mEtconfirmpwd = (EditText) view.findViewById(R.id.et_confirm_password_forgotpwd);
         mBtforgotpwd = (Button) view.findViewById(R.id.bt_forgotpwd);
+        mRlForgotPwd = (RelativeLayout) view.findViewById(R.id.rl_forgotpwd);
 
 
         mBtforgotpwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (validateDetails()) {
-                    Toast.makeText(getActivity(),"Password changed",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Password changed", Toast.LENGTH_SHORT).show();
                     getActivity().getSupportFragmentManager().popBackStack();
                 } else {
 

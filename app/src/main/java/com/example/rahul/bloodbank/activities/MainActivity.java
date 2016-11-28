@@ -28,11 +28,13 @@ import android.widget.TextView;
 
 import com.example.rahul.bloodbank.R;
 import com.example.rahul.bloodbank.adapters.CustomListAdapterDrawer;
+import com.example.rahul.bloodbank.constants.Constant;
 import com.example.rahul.bloodbank.fragments.DashboardFragment;
 import com.example.rahul.bloodbank.fragments.ProfileFragment;
 import com.example.rahul.bloodbank.fragments.SearchFragment;
 import com.example.rahul.bloodbank.fragments.SettingFragment;
 import com.example.rahul.bloodbank.pojo.DrawerItemPojo;
+import com.example.rahul.bloodbank.pojo.RegistrationPojo;
 
 import java.util.ArrayList;
 
@@ -58,7 +60,11 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction().add(R.id.mainactivity_container, new DashboardFragment()).commit();
 
-
+        RegistrationPojo registrationPojo = (RegistrationPojo) getIntent().getSerializableExtra("personObject");
+        if (registrationPojo != null) {
+            Constant.registrationPojo = registrationPojo;
+            headerText.setText("Hello "+registrationPojo.getName());
+        }
     }
 
     private void initializeViews() {

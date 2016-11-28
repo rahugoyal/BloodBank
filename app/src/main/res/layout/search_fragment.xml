@@ -4,9 +4,81 @@
     android:layout_height="match_parent"
     android:background="@drawable/im_dashboard_bg">
 
-    <TextView
+    <RelativeLayout
+        android:id="@+id/rl_search"
+        android:layout_width="200dp"
+        android:layout_height="300dp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:visibility="visible">
+
+
+        <EditText
+            android:id="@+id/et_city_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="#FFFFFF"
+            android:gravity="center"
+            android:hint="*city"
+            android:inputType="textPersonName"
+            android:singleLine="true"
+            android:textColor="#ffffff"
+            android:textColorHint="#FFFFFF" />
+
+        <Spinner
+            android:id="@+id/sp_btype_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_city_search"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="32dp"
+            android:background="#ffffff"
+            android:padding="4dp"
+            android:prompt="@string/spinner_title" />
+
+        <ImageButton
+            android:id="@+id/bt_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/sp_btype_search"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/ic_search_search" />
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/list_persons_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/bt_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="search fragment"/>
+        android:layout_below="@+id/list_persons_search"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+        android:background="#1f9bde"
+        android:padding="6dp"
+        android:text="Back"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:text="No data found"
+        android:visibility="gone"
+         />
 
 </RelativeLayout>
