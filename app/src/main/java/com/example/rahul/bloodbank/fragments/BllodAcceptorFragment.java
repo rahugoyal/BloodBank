@@ -41,13 +41,23 @@ public class BllodAcceptorFragment extends Fragment {
         mTvPhone.setText("Phone : " + Constant.registrationPojo.getPhone());
         mTvName.setText("Name : " + Constant.registrationPojo.getName());
         mTvEmail.setText("Email : " + Constant.registrationPojo.getEmail());
-
+        if (Constant.registrationPojo.isAcceptorStatus()) {
+            mBtAcceptStatus.setText("Not Now");
+        } else {
+            mBtAcceptStatus.setText("Ready to donate");
+        }
         mBtAcceptStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mBtAcceptStatus.getText().equals("Ready to Accept")) {
                     mBtAcceptStatus.setText("Not Now");
+                    Constant.registrationPojo.setAcceptorStatus(true);
+                    Constant.FIREBASE_REF.child("person").child(Constant.registrationPojo.getUsername()).setValue(Constant.registrationPojo);
+
+
                 } else {
+                    Constant.registrationPojo.setAcceptorStatus(false);
+                    Constant.FIREBASE_REF.child("person").child(Constant.registrationPojo.getUsername()).setValue(Constant.registrationPojo);
                     mBtAcceptStatus.setText("Ready to Accept");
                 }
             }

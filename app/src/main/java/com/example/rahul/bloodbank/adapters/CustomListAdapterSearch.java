@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.rahul.bloodbank.R;
+import com.example.rahul.bloodbank.constants.Constant;
 import com.example.rahul.bloodbank.pojo.DrawerItemPojo;
 import com.example.rahul.bloodbank.pojo.RegistrationPojo;
 
@@ -64,6 +65,7 @@ public class CustomListAdapterSearch extends BaseAdapter {
             holder.nameText = (TextView) vi.findViewById(R.id.tv_name_list_search);
             holder.bgText = (TextView) vi.findViewById(R.id.tv_bg_list_search);
             holder.phoneText = (TextView) vi.findViewById(R.id.tv_phone_list_search);
+            holder.mIvOnline = (ImageView) vi.findViewById(R.id.iv_online_search);
 
             vi.setTag(holder);
         } else
@@ -77,6 +79,9 @@ public class CustomListAdapterSearch extends BaseAdapter {
             holder.nameText.setText(registrationPojo.getName());
             holder.bgText.setText(registrationPojo.getBgType());
             holder.phoneText.setText(registrationPojo.getPhone());
+            if (registrationPojo.isDonorStatus() || registrationPojo.isAcceptorStatus()) {
+                holder.mIvOnline.setVisibility(View.VISIBLE);
+            }
 
         }
         return vi;
@@ -85,6 +90,7 @@ public class CustomListAdapterSearch extends BaseAdapter {
     public static class ViewHolder {
 
         public TextView nameText, bgText, phoneText;
+        public ImageView mIvOnline;
 
     }
 

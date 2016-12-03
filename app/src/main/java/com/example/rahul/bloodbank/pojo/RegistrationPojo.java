@@ -16,27 +16,12 @@ public class RegistrationPojo implements Serializable {
     private String name;
     private String userType;
     private String gender;
-    private String photo;
     private String username;
     private String password;
     private boolean donorStatus;
     private boolean acceptorStatus;
 
     public RegistrationPojo() {
-    }
-
-    public RegistrationPojo(String gender, String address, String email, String bgType, String city, String name, String userType, String password, String username, String photo, String phone) {
-        this.gender = gender;
-        this.address = address;
-        this.email = email;
-        this.bgType = bgType;
-        this.city = city;
-        this.name = name;
-        this.userType = userType;
-        this.password = password;
-        this.username = username;
-        this.photo = photo;
-        this.phone = phone;
     }
 
     public String getCity() {
@@ -69,14 +54,6 @@ public class RegistrationPojo implements Serializable {
 
     public void setGender(String gender) {
         this.gender = gender;
-    }
-
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
     }
 
     public String getUsername() {

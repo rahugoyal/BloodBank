@@ -1,6 +1,6 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="192dp"
+    android:layout_height="300dp"
     android:background="?attr/colorPrimaryDark"
     android:gravity="center"
     android:orientation="vertical"
@@ -8,22 +8,16 @@
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
 
-    <ImageView
-        android:id="@+id/image_header_dashboard"
-        android:layout_width="200dp"
-        android:layout_height="150dp"
-        android:scaleType="fitXY"
-        />
-
-
     <TextView
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_marginTop="16dp"
         android:id="@+id/tv_header_dashboard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="Hello Rahul"
         android:textColor="#000"
-        android:text="Hello Rahul" />
+        android:textSize="32dp" />
 
-</LinearLayout>
+</RelativeLayout>

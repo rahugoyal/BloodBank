@@ -7,8 +7,10 @@ import com.firebase.client.Firebase;
  * Created by Rahul on 11/25/2016.
  */
 
-public final class  Constant {
+public final class Constant {
     public static final String FIREBASE_URL = "https://bloodbank-b536e.firebaseio.com/";
-    public  static  Firebase FIREBASE_REF = null;
+    public static Firebase FIREBASE_REF = null;
     public static RegistrationPojo registrationPojo;
+    public static boolean editStatus = true;
+    public static  boolean updateStatus = false;
 }

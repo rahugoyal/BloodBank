@@ -1,9 +1,11 @@
 package com.example.rahul.bloodbank.activities;
 
-import android.app.ProgressDialog;
+
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,29 +21,27 @@ import com.example.rahul.bloodbank.pojo.RegistrationPojo;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
 
     TextView mTvSignUp, mTvForgotPwd;
     Button mBtLogin;
     EditText mEtUsername, mEtPassword;
+    List<RegistrationPojo> registrationPojoList = null;
     RegistrationPojo registrationPojo;
-    ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initializeViews();
-
-
-
+        getUserForAuthenticate();
 
     }
+
 
     private void initializeViews() {
         mTvSignUp = (TextView) findViewById(R.id.tv_signup_login);
@@ -49,12 +49,12 @@ public class LoginActivity extends AppCompatActivity {
         mBtLogin = (Button) findViewById(R.id.bt_login);
         mEtUsername = (EditText) findViewById(R.id.et_username_login);
         mEtPassword = (EditText) findViewById(R.id.et_password_login);
-        progress = new ProgressDialog(this);
+        mEtPassword.setEnabled(false);
 
         mTvSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.login_container, new RegistrationFragment()).addToBackStack("register").commit();
+                getSupportFragmentManager().beginTransaction().add(R.id.login_container, new RegistrationFragment()).addToBackStack("register").commit();
 
             }
         });
@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
         mTvForgotPwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.login_container, new ForgetPwdFragment()).addToBackStack("forgotpwd").commit();
+                getSupportFragmentManager().beginTransaction().add(R.id.login_container, new ForgetPwdFragment()).addToBackStack("forgotpwd").commit();
 
             }
         });
@@ -73,27 +73,17 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mEtUsername.getText() != null && mEtPassword != null && !mEtUsername.getText().toString().isEmpty() && !mEtPassword.getText().toString().isEmpty()) {
-                    progress.setMessage("Logging in ...");
-                    progress.setIndeterminate(true);
-                    progress.setCancelable(false);
-                    progress.show();
-                    RegistrationPojo registrationPojo = getUserForAuthenticate();
                     if (registrationPojo != null) {
                         if (registrationPojo.getPassword().equals(mEtPassword.getText().toString())) {
-                            progress.dismiss();
                             Intent intentDashboard = new Intent(LoginActivity.this, MainActivity.class);
                             intentDashboard.putExtra("personObject", registrationPojo);
                             startActivity(intentDashboard);
+                            finish();
                         } else {
-                            progress.dismiss();
-                            Toast.makeText(getBaseContext(), "Password does not match", Toast.LENGTH_SHORT).show();
-
+                            Toast.makeText(LoginActivity.this, "Password does not match", Toast.LENGTH_SHORT).show();
                         }
-                    } else {
-                        progress.dismiss();
-                        Toast.makeText(getBaseContext(), "Username does not exists", Toast.LENGTH_SHORT).show();
-
-                    }
+                    } else
+                        Toast.makeText(LoginActivity.this, "User id does not exists", Toast.LENGTH_SHORT).show();
 
 
                 } else {
@@ -101,7 +91,34 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+        mEtUsername.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (registrationPojoList != null) {
+                    if (registrationPojoList != null) {
+                        Log.e("hello",registrationPojoList.size()+"");
+                        for (int i = 0; i < registrationPojoList.size(); i++) {
+                            if (s.toString().equals(registrationPojoList.get(i).getUsername())) {
+                                registrationPojo = registrationPojoList.get(i);
+                                mEtUsername.setError("email exists , please use different email");
+                            }
+
+                        }
+
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     @Override
@@ -111,34 +128,29 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    public RegistrationPojo getUserForAuthenticate() {
+    public void getUserForAuthenticate() {
 
+        registrationPojoList = new ArrayList<>();
         Constant.FIREBASE_REF.child("person").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
+                                                                        @Override
+                                                                        public void onDataChange(DataSnapshot snapshot) {
+                                                                            for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                                                                                RegistrationPojo registrationPojo = postSnapshot.getValue(RegistrationPojo.class);
+                                                                                registrationPojoList.add(registrationPojo);
 
-                String allUserData = String.valueOf(snapshot.getValue());
-                if (allUserData != null && !allUserData.isEmpty()) {
-                    try {
-                        JSONObject jsonData = new JSONObject(allUserData);
-                        JSONObject personObject = jsonData.getJSONObject(mEtUsername.getText().toString());
-                        Gson gson = new Gson();
-                        registrationPojo = gson.fromJson(personObject.toString(), RegistrationPojo.class);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
 
-                }
-            }
+                                                                            }
+                                                                        }
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
+                                                                        @Override
+                                                                        public void onCancelled(FirebaseError firebaseError) {
 
-            }
+                                                                        }
 
-        });
+                                                                    }
 
-        return registrationPojo;
+        );
+
     }
 }
 

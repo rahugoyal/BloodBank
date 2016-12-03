@@ -9,6 +9,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +31,9 @@ import android.widget.Toast;
 import com.example.rahul.bloodbank.R;
 import com.example.rahul.bloodbank.constants.Constant;
 import com.example.rahul.bloodbank.pojo.RegistrationPojo;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -45,15 +52,15 @@ public class RegistrationFragment extends Fragment {
     EditText mEtName, mEtEmail, mEtPhone, mEtAddress, mEtCity, mEtUsername, mEtPwd;
     Button mBtRegister;
     CheckBox mCbDonor, mCbAcceptor;
-    ImageView mIvPhoto;
     Spinner mSpBType;
     RadioButton mRbMale, mRbFemale;
     RadioGroup mRgGender;
-
-    int PICK_IMAGE = 1;
     String gender = "", bloodGroupType = "", userType = "";
-    Uri uri;
-    byte[] encodedImage;
+    List<RegistrationPojo> registrationPojoList;
+    boolean isUserExists = false, isEmailExists = false;
+    RegistrationPojo registrationPojoUser, registrationPojoEmail;
+    CharSequence username = "", email = "";
+
 
     @Nullable
     @Override
@@ -66,6 +73,7 @@ public class RegistrationFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initializeViews(view);
+        setList();
 
     }
 
@@ -84,18 +92,28 @@ public class RegistrationFragment extends Fragment {
         mRbFemale = (RadioButton) view.findViewById(R.id.rb_female_registration);
         mRgGender = (RadioGroup) view.findViewById(R.id.rg_gender_registration);
         mSpBType = (Spinner) view.findViewById(R.id.sp_btype_registration);
-        mIvPhoto = (ImageView) view.findViewById(R.id.im_choose_registration);
-        mRgGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        registrationPojoList = new ArrayList<>();
+
+        mRbMale.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == 1) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
                     gender = "male";
                 } else {
-                    gender = "female";
+                    gender = "";
                 }
             }
         });
-
+        mRbFemale.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    gender = "female";
+                } else {
+                    gender = "";
+                }
+            }
+        });
         final List<String> bType = new ArrayList<String>();
         bType.add("Select Blood Group");
         bType.add("A+");
@@ -110,17 +128,6 @@ public class RegistrationFragment extends Fragment {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpBType.setAdapter(dataAdapter);
 
-
-        mIvPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
-
-            }
-        });
 
         mSpBType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -163,36 +170,98 @@ public class RegistrationFragment extends Fragment {
                     registrationPojo.setCity(mEtCity.getText().toString());
                     registrationPojo.setUsername(mEtUsername.getText().toString());
                     registrationPojo.setPassword(mEtPwd.getText().toString());
-
-
-                    if (encodedImage != null) {
-                        String decoded = null;
-                        try {
-                            decoded = new String(encodedImage, "ISO-8859-1");
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                        registrationPojo.setPhoto(decoded);
-                    } else
-                        registrationPojo.setPhoto(null);
-
+                    registrationPojo.setAcceptorStatus(false);
+                    registrationPojo.setDonorStatus(false);
                     registrationPojo.setBgType(bloodGroupType);
                     registrationPojo.setUserType(userType);
 
                     Constant.FIREBASE_REF.child("person").child(registrationPojo.getUsername()).setValue(registrationPojo);
-
                     Toast.makeText(getActivity(), "Register successfully", Toast.LENGTH_SHORT).show();
 
                     getActivity().getSupportFragmentManager().popBackStack();
-                } else {
-                    Toast.makeText(getActivity(), "Not Registered, due to internal error", Toast.LENGTH_SHORT).show();
-
                 }
 
             }
         });
 
+        mEtUsername.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                username = s;
+                if (registrationPojoList != null) {
+
+                    for (int i = 0; i < registrationPojoList.size(); i++) {
+                        if (s.toString().equals(registrationPojoList.get(i).getUsername())) {
+                            registrationPojoUser = registrationPojoList.get(i);
+                            mEtUsername.setError("username exists , please use different username");
+                        }
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+
+        mEtEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (registrationPojoList != null) {
+                    email = s;
+                    if (registrationPojoList != null) {
+                        for (int i = 0; i < registrationPojoList.size(); i++) {
+                            if (s.toString().equals(registrationPojoList.get(i).getEmail())) {
+                                registrationPojoEmail = registrationPojoList.get(i);
+                                mEtEmail.setError("email exists , please use different email");
+                            }
+
+                        }
+
+                    }
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+    }
+
+    public void setList() {
+        Constant.FIREBASE_REF.child("person").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                    RegistrationPojo registrationPojo = postSnapshot.getValue(RegistrationPojo.class);
+                    registrationPojoList.add(registrationPojo);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+
+        });
     }
 
     private void getUserType() {
@@ -208,6 +277,17 @@ public class RegistrationFragment extends Fragment {
     }
 
     private boolean validateLogin() {
+        if (registrationPojoUser != null) {
+            if (registrationPojoUser.getUsername().equals(username.toString())) {
+                isUserExists = true;
+            }
+        }
+        if (registrationPojoEmail != null) {
+            if (registrationPojoEmail.getEmail().equals(email.toString())) {
+                isEmailExists = true;
+            }
+        }
+
         boolean registerStatus = false;
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
         final String PASSWORD_PATTERN =
@@ -215,7 +295,7 @@ public class RegistrationFragment extends Fragment {
         if (mEtName.getText().toString().isEmpty()) {
             mEtName.setError("Name can not be empty");
 
-        } else if (gender.isEmpty()) {
+        } else if (gender.isEmpty() || gender.equals("")) {
             new AlertDialog.Builder(getActivity())
                     .setTitle("Warning!")
                     .setMessage("Pleease select Gender")
@@ -236,6 +316,9 @@ public class RegistrationFragment extends Fragment {
 
         } else if (!mEtEmail.getText().toString().matches(emailPattern)) {
             mEtEmail.setError("Invalid Email");
+        } else if (isEmailExists) {
+            mEtEmail.setError("email exists , please use different email");
+
         } else if (mEtPhone.getText().toString().isEmpty()) {
             mEtPhone.setError("Phone can not be empty");
 
@@ -250,7 +333,10 @@ public class RegistrationFragment extends Fragment {
 
         } else if (mEtUsername.getText().toString().isEmpty()) {
             mEtUsername.setError("Username can not be empty");
-            ;
+
+        } else if (isUserExists) {
+            mEtUsername.setError("username exists , please use different username");
+
         } else if (mEtPwd.getText().toString().isEmpty()) {
             mEtPwd.setError("Password can not be empty");
         } else if (!mEtPwd.getText().toString().matches(PASSWORD_PATTERN)) {
@@ -291,49 +377,5 @@ public class RegistrationFragment extends Fragment {
         return registerStatus;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
-            if (data != null) {
-                uri = data.getData();
-
-                //base 64
-                final InputStream imageStream;
-                try {
-                    imageStream = getActivity().getContentResolver().openInputStream(uri);
-                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-
-                    encodedImage = encodeImage(selectedImage);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-
-
-                mIvPhoto.setImageURI(uri);
-            } else {
-                Toast.makeText(getActivity(), "No Image selected", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-
-    public byte[] encodeImage(Bitmap bitmap) {
-
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
-        return byteArray;
-    }
-//    private Bitmap encodeImage(Bitmap bm) {
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        bm.compress(Bitmap.CompressFormat.JPEG, 40, baos);
-//        byte[] b = baos.toByteArray();
-//
-//        Bitmap encImage = BitmapFactory.decodeByteArray(b, 0, b.length);
-//
-//
-//        return encImage;
-//    }
 }

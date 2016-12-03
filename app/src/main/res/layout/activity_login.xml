@@ -4,7 +4,7 @@
     android:id="@+id/activity_login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/img_login_bg"
+    android:background="@mipmap/img_login_bg"
     tools:context="com.example.rahul.bloodbank.activities.LoginActivity">
 
     <ImageView
@@ -30,7 +30,7 @@
             android:backgroundTint="#FFFFFF"
             android:gravity="center"
             android:hint="username"
-            android:text="jaishree"
+            android:text=""
             android:textColor="#ffffff"
             android:textColorHint="#FFFFFF" />
 
@@ -43,7 +43,7 @@
             android:backgroundTint="#FFFFFF"
             android:gravity="center"
             android:hint="password"
-            android:text="Jai@445"
+            android:text="Nilesh@123"
             android:inputType="textPassword"
             android:textColor="#ffffff"
             android:textColorHint="#FFFFFF" />

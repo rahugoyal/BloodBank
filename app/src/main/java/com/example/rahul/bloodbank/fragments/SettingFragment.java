@@ -2,15 +2,21 @@ package com.example.rahul.bloodbank.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.rahul.bloodbank.R;
+import com.example.rahul.bloodbank.activities.LoginActivity;
+import com.example.rahul.bloodbank.activities.MainActivity;
+import com.example.rahul.bloodbank.constants.Constant;
 
 /**
  * Created by Rahul on 11/25/2016.
@@ -40,7 +46,7 @@ public class SettingFragment extends Fragment {
                 Bundle args = new Bundle();
                 args.putBoolean("isSetting", true);
                 forgetPwdFragment.setArguments(args);
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.mainactivity_container, forgetPwdFragment).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.mainactivity_container, forgetPwdFragment).addToBackStack("ChangePassword").commit();
             }
         });
 
@@ -53,11 +59,21 @@ public class SettingFragment extends Fragment {
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
+                                Constant.FIREBASE_REF.child("person").child(Constant.registrationPojo.getUsername()).removeValue();
+                                FragmentManager fm = getActivity().getSupportFragmentManager();
+                                for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                                    fm.popBackStack();
+                                }
+                                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                startActivity(intent);
+                                getActivity().finish();
+                                Toast.makeText(getActivity(), "Your account deleted successfully", Toast.LENGTH_SHORT).show();
 
                             }
                         })
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(getActivity(), "You cancelled this operation", Toast.LENGTH_SHORT).show();
                                 dialog.dismiss();
                             }
                         })
@@ -70,7 +86,7 @@ public class SettingFragment extends Fragment {
         mLlContactUs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.mainactivity_container, new ContactUsFragment()).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.mainactivity_container, new ContactUsFragment()).addToBackStack("ContactUs").commit();
 
             }
         });
@@ -78,7 +94,7 @@ public class SettingFragment extends Fragment {
         mLlAbout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.mainactivity_container, new AboutFragment()).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.mainactivity_container, new AboutFragment()).addToBackStack("About").commit();
 
             }
         });

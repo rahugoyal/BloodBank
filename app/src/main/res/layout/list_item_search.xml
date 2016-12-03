@@ -8,6 +8,7 @@
     android:layout_marginTop="32dp"
     android:orientation="vertical">
 
+
     <TextView
 
         android:id="@+id/tv_name_list_search"
@@ -19,10 +20,10 @@
         android:textSize="24dp" />
 
     <LinearLayout
-        android:layout_marginTop="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="16dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -31,19 +32,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+
             android:gravity="center"
-            android:text="A+"
+            android:text=""
             android:textSize="16dp" />
 
         <TextView
-            android:layout_marginLeft="16dp"
             android:id="@+id/tv_phone_list_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
             android:gravity="center"
-            android:text="7896654123"
+            android:text=""
             android:textSize="16dp" />
+
+        <ImageView
+            android:id="@+id/iv_online_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:src="@drawable/ic_online"
+            android:visibility="gone" />
     </LinearLayout>
+
 
 </LinearLayout>

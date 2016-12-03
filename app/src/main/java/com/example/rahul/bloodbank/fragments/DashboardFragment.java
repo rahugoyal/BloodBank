@@ -27,6 +27,8 @@ public class DashboardFragment extends Fragment {
         return view;
     }
 
+
+
     private void initializeViews(View view) {
         mRlDonor = (RelativeLayout) view.findViewById(R.id.rl_dashboard_bd);
         mRlAcceptor = (RelativeLayout) view.findViewById(R.id.rl_dashboard_ba);
@@ -34,14 +36,14 @@ public class DashboardFragment extends Fragment {
         mRlDonor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.mainactivity_container, new BllodDonorFragment()).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.mainactivity_container, new BllodDonorFragment()).addToBackStack("BloodDonor").commit();
 
             }
         });
         mRlAcceptor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.mainactivity_container, new BllodAcceptorFragment()).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.mainactivity_container, new BllodAcceptorFragment()).addToBackStack("BloodAcceptor").commit();
 
             }
         });

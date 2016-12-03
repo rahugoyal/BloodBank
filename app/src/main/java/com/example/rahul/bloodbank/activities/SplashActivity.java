@@ -10,9 +10,10 @@ import android.os.Bundle;
 import com.example.rahul.bloodbank.R;
 import com.example.rahul.bloodbank.constants.Constant;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-
-
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 
 public class SplashActivity extends AppCompatActivity {
@@ -27,6 +28,8 @@ public class SplashActivity extends AppCompatActivity {
         if (Constant.FIREBASE_REF == null) {
             Constant.FIREBASE_REF = new Firebase(Constant.FIREBASE_URL);
         }
+
+
 
 
 

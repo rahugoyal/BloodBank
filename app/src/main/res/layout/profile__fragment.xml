@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/im_dashboard_bg">
+    android:background="@mipmap/im_dashboard_bg">
 
 
     <ScrollView
@@ -73,21 +73,12 @@
                 android:textColorHint="#FFFFFF" />
 
 
-            <ImageView
-                android:id="@+id/im_choose_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/et_city_profile"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="24dp"
-                android:src="@drawable/user_browse_ic" />
-
 
             <LinearLayout
                 android:id="@+id/ll_usertype_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/im_choose_profile"
+                android:layout_below="@+id/et_city_profile"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="24dp"
 
