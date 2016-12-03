@@ -102,8 +102,6 @@ public class LoginActivity extends AppCompatActivity {
                     registrationPojo = registrationPojoList.get(i);
                 }
             }
-
-
         }
 
     }

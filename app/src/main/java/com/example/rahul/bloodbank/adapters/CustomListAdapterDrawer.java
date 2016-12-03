@@ -74,7 +74,7 @@ public class CustomListAdapterDrawer extends BaseAdapter {
         } else {
             DrawerItemPojo drawerItemPojo = listDrawer.get(position);
             holder.drawerText.setText(drawerItemPojo.getTitle());
-            holder.drawerImage.setImageDrawable(activity.getDrawable(drawerItemPojo.getImageId()));
+            holder.drawerImage.setImageDrawable(activity.getResources().getDrawable(drawerItemPojo.getImageId()));
 
         }
         return vi;
