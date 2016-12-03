@@ -37,6 +37,8 @@ public class ForgetPwdFragment extends Fragment {
     Button mBtforgotpwd;
     RelativeLayout mRlForgotPwd;
     List<RegistrationPojo> registrationPojoList;
+    RegistrationPojo registrationPojo;
+    boolean isSetting;
 
     @Nullable
     @Override
@@ -52,7 +54,7 @@ public class ForgetPwdFragment extends Fragment {
         setList();
 
         if (getArguments() != null) {
-            boolean isSetting = getArguments().getBoolean("isSetting");
+            isSetting = getArguments().getBoolean("isSetting");
             if (isSetting) {
                 mRlForgotPwd.setBackgroundResource(R.mipmap.im_dashboard_bg);
                 mEtusername.setText(Constant.registrationPojo.getUsername());
@@ -75,46 +77,50 @@ public class ForgetPwdFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (validateDetails()) {
-                    Constant.registrationPojo.setPassword(mEtpassword.getText().toString());
-                    Constant.FIREBASE_REF.child("person").child(Constant.registrationPojo.getUsername()).setValue(Constant.registrationPojo);
+                    getUser();
+                    if (registrationPojo != null) {
+                        if (registrationPojo.getUsername().equals(mEtusername.getText().toString())) {
+                            if(isSetting){
+                                Constant.registrationPojo.setPassword(mEtpassword.getText().toString());
+                                Constant.FIREBASE_REF.child("person").child(Constant.registrationPojo.getUsername()).setValue(Constant.registrationPojo);
 
-                    Toast.makeText(getActivity(), "Password changed", Toast.LENGTH_SHORT).show();
-                    getActivity().getSupportFragmentManager().popBackStack();
-                } else {
+                            }else{
+                                registrationPojo.setPassword(mEtpassword.getText().toString());
+                                Constant.FIREBASE_REF.child("person").child(registrationPojo.getUsername()).setValue(registrationPojo);
 
-                }
-            }
-        });
+                            }
 
-        mEtusername.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (registrationPojoList != null) {
-
-                    for (int i = 0; i < registrationPojoList.size(); i++) {
-                        if (s.toString().equals(registrationPojoList.get(i).getUsername())) {
-                            mEtusername.setCompoundDrawablesWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_right_edittext), null, null, null);
-                        mEtusername.setCompoundDrawablePadding(4);
-
+                            Toast.makeText(getActivity(), "Password changed", Toast.LENGTH_SHORT).show();
+                            getActivity().getSupportFragmentManager().popBackStack();
                         } else {
-                            mEtusername.setError("username does not exists");
+                            Toast.makeText(getActivity(), "username does not exists", Toast.LENGTH_LONG).show();
+
                         }
 
+                    } else {
+                        Toast.makeText(getActivity(), "username does not exists", Toast.LENGTH_LONG).show();
                     }
+
+                }
+            }
+        });
+
+    }
+
+    public void getUser() {
+        registrationPojo = null;
+        if (registrationPojoList != null) {
+            for (int i = 0; i < registrationPojoList.size(); i++) {
+                if (mEtusername.getText().toString().equals(registrationPojoList.get(i).getUsername())) {
+                    registrationPojo = registrationPojoList.get(i);
                 }
             }
 
-            @Override
-            public void afterTextChanged(Editable s) {
 
-            }
-        });
+        }
+
     }
+
 
     private boolean validateDetails() {
         boolean passwordChanged = false;

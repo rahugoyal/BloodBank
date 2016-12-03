@@ -195,7 +195,6 @@ public class RegistrationFragment extends Fragment {
 
                 username = s;
                 if (registrationPojoList != null) {
-
                     for (int i = 0; i < registrationPojoList.size(); i++) {
                         if (s.toString().equals(registrationPojoList.get(i).getUsername())) {
                             registrationPojoUser = registrationPojoList.get(i);
@@ -281,11 +280,13 @@ public class RegistrationFragment extends Fragment {
             if (registrationPojoUser.getUsername().equals(username.toString())) {
                 isUserExists = true;
             }
+            else isUserExists = false;
         }
         if (registrationPojoEmail != null) {
             if (registrationPojoEmail.getEmail().equals(email.toString())) {
                 isEmailExists = true;
             }
+            else isEmailExists = false;
         }
 
         boolean registerStatus = false;

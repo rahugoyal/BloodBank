@@ -49,7 +49,6 @@ public class LoginActivity extends AppCompatActivity {
         mBtLogin = (Button) findViewById(R.id.bt_login);
         mEtUsername = (EditText) findViewById(R.id.et_username_login);
         mEtPassword = (EditText) findViewById(R.id.et_password_login);
-        mEtPassword.setEnabled(false);
 
         mTvSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +72,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mEtUsername.getText() != null && mEtPassword != null && !mEtUsername.getText().toString().isEmpty() && !mEtPassword.getText().toString().isEmpty()) {
+                    getUser();
                     if (registrationPojo != null) {
+                        Log.e(registrationPojo.getPassword(), mEtPassword.getText().toString());
                         if (registrationPojo.getPassword().equals(mEtPassword.getText().toString())) {
                             Intent intentDashboard = new Intent(LoginActivity.this, MainActivity.class);
                             intentDashboard.putExtra("personObject", registrationPojo);
@@ -83,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Password does not match", Toast.LENGTH_SHORT).show();
                         }
                     } else
-                        Toast.makeText(LoginActivity.this, "User id does not exists", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Username does not exists", Toast.LENGTH_SHORT).show();
 
 
                 } else {
@@ -91,34 +92,20 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-        mEtUsername.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    }
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (registrationPojoList != null) {
-                    if (registrationPojoList != null) {
-                        Log.e("hello",registrationPojoList.size()+"");
-                        for (int i = 0; i < registrationPojoList.size(); i++) {
-                            if (s.toString().equals(registrationPojoList.get(i).getUsername())) {
-                                registrationPojo = registrationPojoList.get(i);
-                                mEtUsername.setError("email exists , please use different email");
-                            }
-
-                        }
-
-                    }
+    public void getUser() {
+        registrationPojo = null;
+        if (registrationPojoList != null) {
+            for (int i = 0; i < registrationPojoList.size(); i++) {
+                if (mEtUsername.getText().toString().equals(registrationPojoList.get(i).getUsername())) {
+                    registrationPojo = registrationPojoList.get(i);
                 }
             }
 
-            @Override
-            public void afterTextChanged(Editable s) {
 
-            }
-        });
+        }
+
     }
 
     @Override
