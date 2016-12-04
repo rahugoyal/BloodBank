@@ -8,9 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.rahul.bloodbank.R;
 import com.example.rahul.bloodbank.constants.Constant;
+import com.example.rahul.bloodbank.utils.Utils;
 
 /**
  * Created by Rahul on 11/26/2016.
@@ -49,17 +51,21 @@ public class BllodAcceptorFragment extends Fragment {
         mBtAcceptStatus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mBtAcceptStatus.getText().equals("Ready to Accept")) {
-                    mBtAcceptStatus.setText("Not Now");
-                    Constant.registrationPojo.setAcceptorStatus(true);
-                    Constant.FIREBASE_REF.child("person").child(Constant.registrationPojo.getUsername()).setValue(Constant.registrationPojo);
+                if (Utils.isNetworkAvailable(getActivity().getApplicationContext())) {
+                    if (mBtAcceptStatus.getText().equals("Ready to Accept")) {
+                        mBtAcceptStatus.setText("Not Now");
+                        Constant.registrationPojo.setAcceptorStatus(true);
+                        Constant.FIREBASE_REF.child("person").child(Constant.registrationPojo.getUsername()).setValue(Constant.registrationPojo);
 
 
-                } else {
-                    Constant.registrationPojo.setAcceptorStatus(false);
-                    Constant.FIREBASE_REF.child("person").child(Constant.registrationPojo.getUsername()).setValue(Constant.registrationPojo);
-                    mBtAcceptStatus.setText("Ready to Accept");
-                }
+                    } else {
+                        Constant.registrationPojo.setAcceptorStatus(false);
+                        Constant.FIREBASE_REF.child("person").child(Constant.registrationPojo.getUsername()).setValue(Constant.registrationPojo);
+                        mBtAcceptStatus.setText("Ready to Accept");
+                    }
+                } else
+                    Toast.makeText(getActivity(), "No internet connection", Toast.LENGTH_SHORT).show();
+
             }
         });
 

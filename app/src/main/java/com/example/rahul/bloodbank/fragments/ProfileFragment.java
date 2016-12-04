@@ -1,29 +1,24 @@
 package com.example.rahul.bloodbank.fragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Spinner;
+
 import android.widget.Toast;
 
 import com.example.rahul.bloodbank.R;
 import com.example.rahul.bloodbank.constants.Constant;
 import com.example.rahul.bloodbank.interfaces.Communicator;
+import com.example.rahul.bloodbank.utils.Utils;
 
 /**
  * Created by Rahul on 11/25/2016.
@@ -101,6 +96,8 @@ public class ProfileFragment extends Fragment implements Communicator {
                     mCbAcceptor.setEnabled(true);
                     mCbDonor.setEnabled(true);
                 } else {
+                    Utils.hideKeyboard(v, getActivity().getApplicationContext());
+
                     updateProfile();
                 }
             }
@@ -164,27 +161,29 @@ public class ProfileFragment extends Fragment implements Communicator {
 
     @Override
     public void updateProfile() {
-        if (validateLogin()) {
-            Constant.registrationPojo.setCity(mEtCity.getText().toString().trim());
-            Constant.registrationPojo.setEmail(mEtEmail.getText().toString().trim());
-            Constant.registrationPojo.setPhone(mEtPhone.getText().toString().trim());
-            Constant.registrationPojo.setAddress(mEtAddress.getText().toString().trim());
-            Constant.registrationPojo.setUserType(userType);
+        if (Utils.isNetworkAvailable(getActivity().getApplicationContext())) {
 
-            Constant.FIREBASE_REF.child("person").child(Constant.registrationPojo.getUsername()).setValue(Constant.registrationPojo);
+            if (validateLogin()) {
+                Constant.registrationPojo.setCity(mEtCity.getText().toString().trim());
+                Constant.registrationPojo.setEmail(mEtEmail.getText().toString().trim());
+                Constant.registrationPojo.setPhone(mEtPhone.getText().toString().trim());
+                Constant.registrationPojo.setAddress(mEtAddress.getText().toString().trim());
+                Constant.registrationPojo.setUserType(userType);
+
+                Constant.FIREBASE_REF.child("person").child(Constant.registrationPojo.getUsername()).setValue(Constant.registrationPojo);
 
 
-            Constant.editStatus = true;
-            mBtSaveEdit.setBackgroundResource(R.drawable.ic_edit_profile);
-            mEtAddress.setEnabled(false);
-            mEtEmail.setEnabled(false);
-            mEtCity.setEnabled(false);
-            mEtPhone.setEnabled(false);
-            mCbAcceptor.setEnabled(false);
-            mCbDonor.setEnabled(false);
-            Constant.updateStatus = false;
-           // Toast.makeText(getActivity(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
-        }
+                Constant.editStatus = true;
+                mBtSaveEdit.setBackgroundResource(R.drawable.ic_edit_profile);
+                mEtAddress.setEnabled(false);
+                mEtEmail.setEnabled(false);
+                mEtCity.setEnabled(false);
+                mEtPhone.setEnabled(false);
+                mCbAcceptor.setEnabled(false);
+                mCbDonor.setEnabled(false);
+                Constant.updateStatus = false;
+            }
+        } else Toast.makeText(getActivity(), "No internet connection", Toast.LENGTH_SHORT).show();
 
     }
 }

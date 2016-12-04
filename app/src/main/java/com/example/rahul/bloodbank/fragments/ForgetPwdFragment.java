@@ -3,9 +3,7 @@ package com.example.rahul.bloodbank.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +15,10 @@ import android.widget.Toast;
 import com.example.rahul.bloodbank.R;
 import com.example.rahul.bloodbank.constants.Constant;
 import com.example.rahul.bloodbank.pojo.RegistrationPojo;
+import com.example.rahul.bloodbank.utils.Utils;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.google.gson.Gson;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,32 +71,38 @@ public class ForgetPwdFragment extends Fragment {
         mBtforgotpwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (validateDetails()) {
-                    getUser();
-                    if (registrationPojo != null) {
-                        if (registrationPojo.getUsername().equals(mEtusername.getText().toString())) {
-                            if(isSetting){
-                                Constant.registrationPojo.setPassword(mEtpassword.getText().toString());
-                                Constant.FIREBASE_REF.child("person").child(Constant.registrationPojo.getUsername()).setValue(Constant.registrationPojo);
+                if (Utils.isNetworkAvailable(getActivity().getApplicationContext())) {
+                    Utils.hideKeyboard(v,getActivity().getApplicationContext());
 
-                            }else{
-                                registrationPojo.setPassword(mEtpassword.getText().toString());
-                                Constant.FIREBASE_REF.child("person").child(registrationPojo.getUsername()).setValue(registrationPojo);
+                    if (validateDetails()) {
+                        getUser();
+                        if (registrationPojo != null) {
+                            if (registrationPojo.getUsername().equals(mEtusername.getText().toString())) {
+                                if (isSetting) {
+                                    Constant.registrationPojo.setPassword(mEtpassword.getText().toString());
+                                    Constant.FIREBASE_REF.child("person").child(Constant.registrationPojo.getUsername()).setValue(Constant.registrationPojo);
+
+                                } else {
+                                    registrationPojo.setPassword(mEtpassword.getText().toString());
+                                    Constant.FIREBASE_REF.child("person").child(registrationPojo.getUsername()).setValue(registrationPojo);
+
+                                }
+
+                                Toast.makeText(getActivity(), "Password changed", Toast.LENGTH_SHORT).show();
+                                getActivity().getSupportFragmentManager().popBackStack();
+                            } else {
+                                Toast.makeText(getActivity(), "username does not exists", Toast.LENGTH_LONG).show();
 
                             }
 
-                            Toast.makeText(getActivity(), "Password changed", Toast.LENGTH_SHORT).show();
-                            getActivity().getSupportFragmentManager().popBackStack();
                         } else {
                             Toast.makeText(getActivity(), "username does not exists", Toast.LENGTH_LONG).show();
-
                         }
-
-                    } else {
-                        Toast.makeText(getActivity(), "username does not exists", Toast.LENGTH_LONG).show();
                     }
+                } else
+                    Toast.makeText(getActivity(), "No internet connection", Toast.LENGTH_SHORT).show();
 
-                }
+
             }
         });
 

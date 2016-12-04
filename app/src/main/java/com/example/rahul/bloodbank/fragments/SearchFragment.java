@@ -3,7 +3,6 @@ package com.example.rahul.bloodbank.fragments;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import com.example.rahul.bloodbank.R;
 import com.example.rahul.bloodbank.adapters.CustomListAdapterSearch;
 import com.example.rahul.bloodbank.constants.Constant;
 import com.example.rahul.bloodbank.pojo.RegistrationPojo;
+import com.example.rahul.bloodbank.utils.Utils;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
@@ -43,7 +43,7 @@ public class SearchFragment extends Fragment {
     ListView mListView;
     RelativeLayout mRlSearch;
     Button mBtBack;
-    boolean isFound = false;
+
 
     @Nullable
     @Override
@@ -104,48 +104,53 @@ public class SearchFragment extends Fragment {
         mBtSearch.setOnClickListener(new View.OnClickListener() {
                                          @Override
                                          public void onClick(View v) {
-                                             finalList = new ArrayList<RegistrationPojo>();
+                                             if (Utils.isNetworkAvailable(getActivity().getApplicationContext())) {
+                                                 Utils.hideKeyboard(v,getActivity().getApplicationContext());
 
-                                             if (mEtCity.getText().toString() != null && !mEtCity.getText().toString().isEmpty() && bloodGroup != null && !bloodGroup.equals("")) {
-                                                 if (registrationPojoList != null) {
-                                                     for (int i = 0; i < registrationPojoList.size(); i++) {
-                                                         RegistrationPojo registrationPojo = registrationPojoList.get(i);
-                                                         if (registrationPojo != null) {
-                                                             if (mEtCity.getText().toString().trim().equals(registrationPojo.getCity()) && bloodGroup.equals(registrationPojo.getBgType())) {
-                                                                 finalList.add(registrationPojo);
+                                                 finalList = new ArrayList<RegistrationPojo>();
+
+                                                 if (mEtCity.getText().toString() != null && !mEtCity.getText().toString().isEmpty() && bloodGroup != null && !bloodGroup.equals("")) {
+                                                     if (registrationPojoList != null) {
+                                                         for (int i = 0; i < registrationPojoList.size(); i++) {
+                                                             RegistrationPojo registrationPojo = registrationPojoList.get(i);
+                                                             if (registrationPojo != null) {
+                                                                 if (mEtCity.getText().toString().trim().equals(registrationPojo.getCity()) && bloodGroup.equals(registrationPojo.getBgType())) {
+                                                                     finalList.add(registrationPojo);
+                                                                 }
                                                              }
-                                                         }
-
-                                                     }
-                                                     if (finalList != null) {
-                                                         if (finalList.size() > 0) {
-                                                             mRlSearch.setVisibility(View.GONE);
-                                                             mListView.setVisibility(View.VISIBLE);
-                                                             mBtBack.setVisibility(View.VISIBLE);
-                                                             mEtCity.setText("");
-                                                             mSpBgroup.setSelection(0);
-                                                             mListView.setAdapter(new CustomListAdapterSearch(getActivity(), (ArrayList<RegistrationPojo>) finalList));
-
-                                                         } else {
-                                                             finalList = new ArrayList<RegistrationPojo>();
-                                                             mEtCity.setText("");
-                                                             mSpBgroup.setSelection(0);
-                                                             mListView.setEmptyView(v.findViewById(R.id.empty));
-                                                             mRlSearch.setVisibility(View.GONE);
-                                                             mListView.setVisibility(View.VISIBLE);
-                                                             mBtBack.setVisibility(View.VISIBLE);
-                                                             mListView.setAdapter(new CustomListAdapterSearch(getActivity(), (ArrayList<RegistrationPojo>) finalList));
-
-                                                             Toast.makeText(getActivity(), "no data found", Toast.LENGTH_SHORT).show();
 
                                                          }
+                                                         if (finalList != null) {
+                                                             if (finalList.size() > 0) {
+                                                                 mRlSearch.setVisibility(View.GONE);
+                                                                 mListView.setVisibility(View.VISIBLE);
+                                                                 mBtBack.setVisibility(View.VISIBLE);
+                                                                 mEtCity.setText("");
+                                                                 mSpBgroup.setSelection(0);
+                                                                 mListView.setAdapter(new CustomListAdapterSearch(getActivity(), (ArrayList<RegistrationPojo>) finalList));
+
+                                                             } else {
+                                                                 finalList = new ArrayList<RegistrationPojo>();
+                                                                 mEtCity.setText("");
+                                                                 mSpBgroup.setSelection(0);
+                                                                 mListView.setEmptyView(v.findViewById(R.id.empty));
+                                                                 mRlSearch.setVisibility(View.GONE);
+                                                                 mListView.setVisibility(View.VISIBLE);
+                                                                 mBtBack.setVisibility(View.VISIBLE);
+                                                                 mListView.setAdapter(new CustomListAdapterSearch(getActivity(), (ArrayList<RegistrationPojo>) finalList));
+
+                                                                 Toast.makeText(getActivity(), "no data found", Toast.LENGTH_SHORT).show();
+
+                                                             }
+
+                                                         }
+
 
                                                      }
-
-
-                                                 }
+                                                 } else
+                                                     Toast.makeText(getActivity(), "please enter needed values", Toast.LENGTH_SHORT).show();
                                              } else
-                                                 Toast.makeText(getActivity(), "please enter needed values", Toast.LENGTH_SHORT).show();
+                                                 Toast.makeText(getActivity(), "No internet connection", Toast.LENGTH_SHORT).show();
 
                                          }
                                      }

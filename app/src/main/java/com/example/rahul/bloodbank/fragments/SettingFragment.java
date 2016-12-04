@@ -17,6 +17,7 @@ import com.example.rahul.bloodbank.R;
 import com.example.rahul.bloodbank.activities.LoginActivity;
 import com.example.rahul.bloodbank.activities.MainActivity;
 import com.example.rahul.bloodbank.constants.Constant;
+import com.example.rahul.bloodbank.utils.Utils;
 
 /**
  * Created by Rahul on 11/25/2016.
@@ -59,16 +60,19 @@ public class SettingFragment extends Fragment {
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                Constant.FIREBASE_REF.child("person").child(Constant.registrationPojo.getUsername()).removeValue();
-                                FragmentManager fm = getActivity().getSupportFragmentManager();
-                                for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
-                                    fm.popBackStack();
-                                }
-                                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                                startActivity(intent);
-                                getActivity().finish();
-                                Toast.makeText(getActivity(), "Your account deleted successfully", Toast.LENGTH_SHORT).show();
+                                if (Utils.isNetworkAvailable(getActivity().getApplicationContext())) {
+                                    Constant.FIREBASE_REF.child("person").child(Constant.registrationPojo.getUsername()).removeValue();
+                                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                                    for (int i = 0; i < fm.getBackStackEntryCount(); ++i) {
+                                        fm.popBackStack();
+                                    }
+                                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                    startActivity(intent);
+                                    getActivity().finish();
+                                    Toast.makeText(getActivity(), "Your account deleted successfully", Toast.LENGTH_SHORT).show();
 
+                                } else
+                                    Toast.makeText(getActivity(), "No internet connection", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

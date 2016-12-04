@@ -2,17 +2,12 @@ package com.example.rahul.bloodbank.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,18 +26,13 @@ import android.widget.Toast;
 import com.example.rahul.bloodbank.R;
 import com.example.rahul.bloodbank.constants.Constant;
 import com.example.rahul.bloodbank.pojo.RegistrationPojo;
+import com.example.rahul.bloodbank.utils.Utils;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by Rahul on 11/21/2016.
@@ -159,28 +149,35 @@ public class RegistrationFragment extends Fragment {
         mBtRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (validateLogin()) {
-                    RegistrationPojo registrationPojo = new RegistrationPojo();
+                if (Utils.isNetworkAvailable(getActivity().getApplicationContext())) {
+                    Utils.hideKeyboard(v,getActivity().getApplicationContext());
 
-                    registrationPojo.setName(mEtName.getText().toString());
-                    registrationPojo.setGender(gender);
-                    registrationPojo.setEmail(mEtEmail.getText().toString());
-                    registrationPojo.setPhone(mEtPhone.getText().toString());
-                    registrationPojo.setAddress(mEtAddress.getText().toString());
-                    registrationPojo.setCity(mEtCity.getText().toString());
-                    registrationPojo.setUsername(mEtUsername.getText().toString());
-                    registrationPojo.setPassword(mEtPwd.getText().toString());
-                    registrationPojo.setAcceptorStatus(false);
-                    registrationPojo.setDonorStatus(false);
-                    registrationPojo.setBgType(bloodGroupType);
-                    registrationPojo.setUserType(userType);
+                    if (validateLogin()) {
+                        RegistrationPojo registrationPojo = new RegistrationPojo();
 
-                    Constant.FIREBASE_REF.child("person").child(registrationPojo.getUsername()).setValue(registrationPojo);
-                    Toast.makeText(getActivity(), "Register successfully", Toast.LENGTH_SHORT).show();
+                        registrationPojo.setName(mEtName.getText().toString());
+                        registrationPojo.setGender(gender);
+                        registrationPojo.setEmail(mEtEmail.getText().toString());
+                        registrationPojo.setPhone(mEtPhone.getText().toString());
+                        registrationPojo.setAddress(mEtAddress.getText().toString());
+                        registrationPojo.setCity(mEtCity.getText().toString());
+                        registrationPojo.setUsername(mEtUsername.getText().toString());
+                        registrationPojo.setPassword(mEtPwd.getText().toString());
+                        registrationPojo.setAcceptorStatus(false);
+                        registrationPojo.setDonorStatus(false);
+                        registrationPojo.setBgType(bloodGroupType);
+                        registrationPojo.setUserType(userType);
 
-                    getActivity().getSupportFragmentManager().popBackStack();
+                        Constant.FIREBASE_REF.child("person").child(registrationPojo.getUsername()).setValue(registrationPojo);
+                        Toast.makeText(getActivity(), "Register successfully", Toast.LENGTH_SHORT).show();
+
+                        getActivity().getSupportFragmentManager().popBackStack();
+                    }
+
+                } else {
+                    Toast.makeText(getActivity(), "No internet connection", Toast.LENGTH_SHORT).show();
+
                 }
-
             }
         });
 
@@ -279,14 +276,12 @@ public class RegistrationFragment extends Fragment {
         if (registrationPojoUser != null) {
             if (registrationPojoUser.getUsername().equals(username.toString())) {
                 isUserExists = true;
-            }
-            else isUserExists = false;
+            } else isUserExists = false;
         }
         if (registrationPojoEmail != null) {
             if (registrationPojoEmail.getEmail().equals(email.toString())) {
                 isEmailExists = true;
-            }
-            else isEmailExists = false;
+            } else isEmailExists = false;
         }
 
         boolean registerStatus = false;

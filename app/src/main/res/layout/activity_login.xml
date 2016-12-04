@@ -43,7 +43,7 @@
             android:backgroundTint="#FFFFFF"
             android:gravity="center"
             android:hint="password"
-            android:text="Nilesh@123"
+            android:text=""
             android:inputType="textPassword"
             android:textColor="#ffffff"
             android:textColorHint="#FFFFFF" />

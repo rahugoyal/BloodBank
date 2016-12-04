@@ -1,13 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@mipmap/im_dashboard_bg"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@mipmap/im_dashboard_bg">
 
-    <TextView
-        android:id="@+id/tv_contact_us"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="ContactUs" />
+        android:layout_centerInParent="true">
+
+        <TextView
+            android:id="@+id/tv_contact_us_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="56dp"
+            android:text="@string/contact_us_name"
+            android:textSize="24dp"/>
+
+        <TextView
+            android:id="@+id/tv_contact_us"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_contact_us_name"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="32dp"
+            android:text="@string/contact_us_desc"
+            android:textSize="16dp" />
+
+        <ImageButton
+            android:id="@+id/ib_contact_us"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_contact_us"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/ic_call" />
+
+
+        <TextView
+            android:id="@+id/tv_contact_us_number1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ib_contact_us"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="24dp"
+            android:text="+91-7416307478"
+            android:textColor="#251aeb"
+            android:textSize="16dp" />
+
+
+        <TextView
+            android:id="@+id/tv_contact_us_number2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_contact_us_number1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:text="+91-7354266244"
+            android:textColor="#251aeb"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/tv_contact_us_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_contact_us_number2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="@string/contact_us_email"
+            android:textColor="#251aeb"
+            android:textSize="16dp" />
+    </RelativeLayout>
 </RelativeLayout>

@@ -4,4 +4,8 @@
     <string name="signup_text"><u>New here? Sign Up</u></string>
     <string name="drawer_close">close</string>
     <string name="drawer_open">open</string>
+    <string name="about_desc"><b><i>Android App version 1.0.0</i></b> \n\n\nThis is alpha version of this app. it is still evolving and we are committed to making it a little better each day \n\n\nCrash reports are automatically reported back to us. \n\n\n<b><i>Copyright 2016 , Rahul Goyal  </i></b>\n<b><i>Developed by - Rahul Goyal</i></b></string>
+    <string name="contact_us_desc">102 - Jagan Nilayam \nKondapur Signal, Miyapur Road \nHyderabad (Telangana) - 500084</string>
+    <string name="contact_us_name"><b>Rahul Goyal , Android Developer</b></string>
+    <string name="contact_us_email"><i>rahulgoyalsbl005@gmail.com</i></string>
 </resources>

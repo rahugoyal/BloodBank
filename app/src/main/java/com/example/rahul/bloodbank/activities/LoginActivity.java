@@ -18,6 +18,7 @@ import com.example.rahul.bloodbank.constants.Constant;
 import com.example.rahul.bloodbank.fragments.ForgetPwdFragment;
 import com.example.rahul.bloodbank.fragments.RegistrationFragment;
 import com.example.rahul.bloodbank.pojo.RegistrationPojo;
+import com.example.rahul.bloodbank.utils.Utils;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
@@ -71,24 +72,28 @@ public class LoginActivity extends AppCompatActivity {
         mBtLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mEtUsername.getText() != null && mEtPassword != null && !mEtUsername.getText().toString().isEmpty() && !mEtPassword.getText().toString().isEmpty()) {
-                    getUser();
-                    if (registrationPojo != null) {
-                        Log.e(registrationPojo.getPassword(), mEtPassword.getText().toString());
-                        if (registrationPojo.getPassword().equals(mEtPassword.getText().toString())) {
-                            Intent intentDashboard = new Intent(LoginActivity.this, MainActivity.class);
-                            intentDashboard.putExtra("personObject", registrationPojo);
-                            startActivity(intentDashboard);
-                            finish();
-                        } else {
-                            Toast.makeText(LoginActivity.this, "Password does not match", Toast.LENGTH_SHORT).show();
-                        }
-                    } else
-                        Toast.makeText(LoginActivity.this, "Username does not exists", Toast.LENGTH_SHORT).show();
+                if (Utils.isNetworkAvailable(getApplicationContext())) {
+                    Utils.hideKeyboard(v, getApplicationContext());
+                    if (mEtUsername.getText() != null && mEtPassword != null && !mEtUsername.getText().toString().isEmpty() && !mEtPassword.getText().toString().isEmpty()) {
+                        getUser();
+                        if (registrationPojo != null) {
+                            if (registrationPojo.getPassword().equals(mEtPassword.getText().toString())) {
+                                Intent intentDashboard = new Intent(LoginActivity.this, MainActivity.class);
+                                intentDashboard.putExtra("personObject", registrationPojo);
+                                startActivity(intentDashboard);
+                                finish();
+                            } else {
+                                Toast.makeText(LoginActivity.this, "Password does not match", Toast.LENGTH_SHORT).show();
+                            }
+                        } else
+                            Toast.makeText(LoginActivity.this, "Username does not exists", Toast.LENGTH_SHORT).show();
 
 
+                    } else {
+                        Toast.makeText(getBaseContext(), "Username or password can not empty", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(getBaseContext(), "Username or password can not empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "No internet connection", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -116,6 +121,8 @@ public class LoginActivity extends AppCompatActivity {
     public void getUserForAuthenticate() {
 
         registrationPojoList = new ArrayList<>();
+
+
         Constant.FIREBASE_REF.child("person").addValueEventListener(new ValueEventListener() {
                                                                         @Override
                                                                         public void onDataChange(DataSnapshot snapshot) {
@@ -135,6 +142,7 @@ public class LoginActivity extends AppCompatActivity {
                                                                     }
 
         );
+
 
     }
 }
