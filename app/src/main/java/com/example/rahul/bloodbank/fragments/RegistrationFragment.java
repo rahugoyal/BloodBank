@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -23,8 +24,16 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.digits.sdk.android.AuthCallback;
+import com.digits.sdk.android.AuthConfig;
+import com.digits.sdk.android.Digits;
+import com.digits.sdk.android.DigitsAuthButton;
+import com.digits.sdk.android.DigitsException;
+import com.digits.sdk.android.DigitsSession;
 import com.example.rahul.bloodbank.R;
+import com.example.rahul.bloodbank.applications.DemoApplication;
 import com.example.rahul.bloodbank.constants.Constant;
+import com.example.rahul.bloodbank.interfaces.Communicator;
 import com.example.rahul.bloodbank.pojo.RegistrationPojo;
 import com.example.rahul.bloodbank.utils.Utils;
 import com.firebase.client.DataSnapshot;
@@ -41,6 +50,7 @@ import java.util.List;
 public class RegistrationFragment extends Fragment {
     EditText mEtName, mEtEmail, mEtPhone, mEtAddress, mEtCity, mEtUsername, mEtPwd;
     Button mBtRegister;
+    DigitsAuthButton mAuthbtn;
     CheckBox mCbDonor, mCbAcceptor;
     Spinner mSpBType;
     RadioButton mRbMale, mRbFemale;
@@ -50,6 +60,8 @@ public class RegistrationFragment extends Fragment {
     boolean isUserExists = false, isEmailExists = false;
     RegistrationPojo registrationPojoUser, registrationPojoEmail;
     CharSequence username = "", email = "";
+    RegistrationPojo registrationPojo = null;
+    AuthCallback mAuthCallback;
 
 
     @Nullable
@@ -83,6 +95,10 @@ public class RegistrationFragment extends Fragment {
         mRgGender = (RadioGroup) view.findViewById(R.id.rg_gender_registration);
         mSpBType = (Spinner) view.findViewById(R.id.sp_btype_registration);
         registrationPojoList = new ArrayList<>();
+
+        mAuthbtn = (DigitsAuthButton) view.findViewById(R.id.bt_auth_registration);
+        mAuthbtn.setText("Authentication");
+
 
         mRbMale.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -149,11 +165,13 @@ public class RegistrationFragment extends Fragment {
         mBtRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 if (Utils.isNetworkAvailable(getActivity().getApplicationContext())) {
-                    Utils.hideKeyboard(v,getActivity().getApplicationContext());
+                    Utils.hideKeyboard(v, getActivity().getApplicationContext());
+                    Digits.clearActiveSession();
 
                     if (validateLogin()) {
-                        RegistrationPojo registrationPojo = new RegistrationPojo();
+                        registrationPojo = new RegistrationPojo();
 
                         registrationPojo.setName(mEtName.getText().toString());
                         registrationPojo.setGender(gender);
@@ -167,11 +185,27 @@ public class RegistrationFragment extends Fragment {
                         registrationPojo.setDonorStatus(false);
                         registrationPojo.setBgType(bloodGroupType);
                         registrationPojo.setUserType(userType);
+                        mAuthCallback = new AuthCallback() {
+                            @Override
+                            public void success(DigitsSession session, String phoneNumber) {
 
-                        Constant.FIREBASE_REF.child("person").child(registrationPojo.getUsername()).setValue(registrationPojo);
-                        Toast.makeText(getActivity(), "Register successfully", Toast.LENGTH_SHORT).show();
+                                Constant.FIREBASE_REF.child("person").child(registrationPojo.getUsername()).setValue(registrationPojo);
+                                Toast.makeText(getActivity(), "Register successfully", Toast.LENGTH_SHORT).show();
+                                refreshProfileFragment();
+                            }
 
-                        getActivity().getSupportFragmentManager().popBackStack();
+                            @Override
+                            public void failure(DigitsException exception) {
+                                Toast.makeText(getActivity(), "Failed to authenticate", Toast.LENGTH_SHORT).show();
+                                refreshProfileFragment();
+                            }
+                        };
+                        mAuthbtn.setCallback(mAuthCallback);
+                        AuthConfig.Builder authConfigBuilder = new AuthConfig.Builder()
+                                .withAuthCallBack(mAuthCallback)
+                                .withPhoneNumber("+91" + registrationPojo.getPhone());
+                        Digits.authenticate(authConfigBuilder.build());
+
                     }
 
                 } else {
@@ -373,5 +407,20 @@ public class RegistrationFragment extends Fragment {
         return registerStatus;
     }
 
+    public void refreshProfileFragment() {
+        mEtAddress.setText("");
+        mEtCity.setText("");
+        mEtName.setText("");
+        mRbFemale.setSelected(false);
+        mRbMale.setSelected(false);
+        mEtEmail.setText("");
+        mEtPhone.setText("");
+        mEtUsername.setText("");
+        mEtPwd.setText("");
+        mSpBType.setSelection(0);
+        mCbAcceptor.setChecked(false);
+        mCbDonor.setChecked(false);
+        registrationPojo = null;
 
+    }
 }

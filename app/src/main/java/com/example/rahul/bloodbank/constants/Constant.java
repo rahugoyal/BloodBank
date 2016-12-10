@@ -12,5 +12,5 @@ public final class Constant {
     public static Firebase FIREBASE_REF = null;
     public static RegistrationPojo registrationPojo;
     public static boolean editStatus = true;
-    public static  boolean updateStatus = false;
+    public static boolean updateStatus = false;
 }

@@ -186,4 +186,5 @@ public class ProfileFragment extends Fragment implements Communicator {
         } else Toast.makeText(getActivity(), "No internet connection", Toast.LENGTH_SHORT).show();
 
     }
+
 }

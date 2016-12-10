@@ -12,7 +12,14 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.digits.sdk.android.AuthCallback;
+import com.digits.sdk.android.AuthConfig;
+import com.digits.sdk.android.Digits;
+import com.digits.sdk.android.DigitsAuthButton;
+import com.digits.sdk.android.DigitsException;
+import com.digits.sdk.android.DigitsSession;
 import com.example.rahul.bloodbank.R;
+import com.example.rahul.bloodbank.applications.DemoApplication;
 import com.example.rahul.bloodbank.constants.Constant;
 import com.example.rahul.bloodbank.pojo.RegistrationPojo;
 import com.example.rahul.bloodbank.utils.Utils;
@@ -30,10 +37,12 @@ import java.util.List;
 public class ForgetPwdFragment extends Fragment {
     EditText mEtusername, mEtpassword, mEtconfirmpwd;
     Button mBtforgotpwd;
+    DigitsAuthButton mAuthBtn;
     RelativeLayout mRlForgotPwd;
     List<RegistrationPojo> registrationPojoList;
     RegistrationPojo registrationPojo;
     boolean isSetting;
+    AuthCallback mAuthCallback;
 
     @Nullable
     @Override
@@ -63,33 +72,72 @@ public class ForgetPwdFragment extends Fragment {
         mEtusername = (EditText) view.findViewById(R.id.et_username_forgotpwd);
         mEtpassword = (EditText) view.findViewById(R.id.et_password_forgotpwd);
         mEtconfirmpwd = (EditText) view.findViewById(R.id.et_confirm_password_forgotpwd);
-        mBtforgotpwd = (Button) view.findViewById(R.id.bt_forgotpwd);
         mRlForgotPwd = (RelativeLayout) view.findViewById(R.id.rl_forgotpwd);
+        mBtforgotpwd = (Button) view.findViewById(R.id.bt_forgotpwd);
         registrationPojoList = new ArrayList<>();
+        mAuthBtn = (DigitsAuthButton) view.findViewById(R.id.bt_auth_forgotpwd);
+        mAuthBtn.setText("Authentication");
 
 
         mBtforgotpwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Digits.clearActiveSession();
+
                 if (Utils.isNetworkAvailable(getActivity().getApplicationContext())) {
-                    Utils.hideKeyboard(v,getActivity().getApplicationContext());
+                    Utils.hideKeyboard(v, getActivity().getApplicationContext());
 
                     if (validateDetails()) {
                         getUser();
                         if (registrationPojo != null) {
                             if (registrationPojo.getUsername().equals(mEtusername.getText().toString())) {
                                 if (isSetting) {
-                                    Constant.registrationPojo.setPassword(mEtpassword.getText().toString());
-                                    Constant.FIREBASE_REF.child("person").child(Constant.registrationPojo.getUsername()).setValue(Constant.registrationPojo);
+                                    mAuthCallback = new AuthCallback() {
+                                        @Override
+                                        public void success(DigitsSession session, String phoneNumber) {
+                                            Constant.registrationPojo.setPassword(mEtpassword.getText().toString());
+                                            Constant.FIREBASE_REF.child("person").child(Constant.registrationPojo.getUsername()).setValue(Constant.registrationPojo);
+                                            Toast.makeText(getActivity(), "Password changed", Toast.LENGTH_SHORT).show();
+                                            refreshFragment();
 
+                                        }
+
+                                        @Override
+                                        public void failure(DigitsException exception) {
+                                            Toast.makeText(getActivity(), "Failed to authenticate", Toast.LENGTH_SHORT).show();
+                                            refreshFragment();
+
+                                        }
+                                    };
+                                    mAuthBtn.setCallback(mAuthCallback);
+                                    AuthConfig.Builder authConfigBuilder = new AuthConfig.Builder()
+                                            .withAuthCallBack(mAuthCallback)
+                                            .withPhoneNumber("+91" + Constant.registrationPojo.getPhone());
+                                    Digits.authenticate(authConfigBuilder.build());
                                 } else {
-                                    registrationPojo.setPassword(mEtpassword.getText().toString());
-                                    Constant.FIREBASE_REF.child("person").child(registrationPojo.getUsername()).setValue(registrationPojo);
+                                    mAuthCallback = new AuthCallback() {
+                                        @Override
+                                        public void success(DigitsSession session, String phoneNumber) {
+                                            registrationPojo.setPassword(mEtpassword.getText().toString());
+                                            Constant.FIREBASE_REF.child("person").child(registrationPojo.getUsername()).setValue(registrationPojo);
+                                            Toast.makeText(getActivity(), "Password changed", Toast.LENGTH_SHORT).show();
+                                            refreshFragment();
+                                        }
+
+                                        @Override
+                                        public void failure(DigitsException exception) {
+                                            Toast.makeText(getActivity(), "Failed to authenticate", Toast.LENGTH_SHORT).show();
+                                            refreshFragment();
+
+                                        }
+                                    };
+                                    mAuthBtn.setCallback(mAuthCallback);
+                                    AuthConfig.Builder authConfigBuilder = new AuthConfig.Builder()
+                                            .withAuthCallBack(mAuthCallback)
+                                            .withPhoneNumber("+91" + registrationPojo.getPhone());
+                                    Digits.authenticate(authConfigBuilder.build());
 
                                 }
-
-                                Toast.makeText(getActivity(), "Password changed", Toast.LENGTH_SHORT).show();
-                                getActivity().getSupportFragmentManager().popBackStack();
                             } else {
                                 Toast.makeText(getActivity(), "username does not exists", Toast.LENGTH_LONG).show();
 
@@ -164,5 +212,16 @@ public class ForgetPwdFragment extends Fragment {
         });
 
 
+    }
+
+    public void refreshFragment() {
+        if (isSetting) {
+            mEtconfirmpwd.setText("");
+            mEtpassword.setText("");
+        } else {
+            mEtconfirmpwd.setText("");
+            mEtpassword.setText("");
+            mEtusername.setText("");
+        }
     }
 }
